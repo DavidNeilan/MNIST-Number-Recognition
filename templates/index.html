@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en-UK">
+<head>
+    <title>Number Recognition</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+</head>
+<body>
+<div id="input-wrapper">
+    <canvas id="myCanvas" width="500" height="500" style="border:2px solid black"></canvas>
+    <form class="controls" method="post">
+        <input type="hidden" id="canvas-data" name="canvas-data">
+        <input type="submit" value="Predict">
+        <button onclick="clearArea()" type="button">Clear</button>
+    </form>
+
+    {% if result is defined %}
+        <div class="result-wrapper">
+            <h1>The number is: {{ result }}</h1>
+            <canvas id="result-graph"></canvas>
+        </div>
+    {% endif %}
+</div>
+<script type="application/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
+
+{% if result is defined %}
+    <script>
+        let data = {{ data }};
+        let myLineChart = new Chart(document.getElementById('result-graph'),
+            {
+                type: 'line',
+                data: {
+                    labels: Object.keys(data),
+                    datasets: [{
+                        data: Object.values(data),
+                        label: "Confidence",
+                        borderColor: "#3e95cd",
+                        fill: false
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: true,
+                    title: {
+                        display: true,
+                        text: 'Confidence by number'
+                    }
+                }
+            });
+    </script>
+{% endif %}
+</body>`
+</html>
